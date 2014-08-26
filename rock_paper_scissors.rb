@@ -5,6 +5,10 @@ options["r"] = { "name" => "rock",  "target" => "scissors", "action" => "crushes
 options["p"] = { "name" => "paper",  "target" => "rock", "action" => "wraps"}
 options["s"] = { "name" => "scissors",  "target" => "paper", "action" => "cut"}
 
+# not sure why this isn't working to clear the screen
+system 'clear'
+
+puts
 puts "---------------------------"
 puts "Play Rock Paper Scissors!"
 puts "---------------------------"
@@ -16,14 +20,21 @@ while playing
   puts 
   puts "Choose your weapon: [R]ock  [P]aper  [S]cissors"
   input = gets.chomp
-  player_choice = options[input.downcase]         
+  # make sure user selects R, P or S only
+  while (input.size !=1) || !input.downcase.match(/[rps]/) 
+    puts "Not a valid selection. Select R, P, or S" 
+    input = gets.chomp    
+  end
+  
+  player_choice = options[input]         
   puts "You chose #{player_choice['name'].capitalize}"
 
-  # Computer selects random
+  # computer selects random 
   r = Random.new.rand(0..options.size - 1)
   computer_choice = options.values[r]
   puts "I chose #{computer_choice["name"].capitalize}"
 
+  # test for the winner
   if player_choice == computer_choice
     puts "It's a tie!"
   elsif player_choice["target"] == computer_choice["name"]
@@ -36,7 +47,7 @@ while playing
     wins[:computer] += 1
   end
   
-  puts "Score:\nYou: #{wins[:player]}  Me: #{wins[:computer]}"
+  puts "Score: You: #{wins[:player]}  Me: #{wins[:computer]}"
   
   # prompt to play again
   puts "\nPlay again?  [Y]es  [N]o"
